@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-public class RabbitConfig {
+public class ShopMQ {
     public static final String SHOP_EXCHANGE = "shop.topic";
     public static final String SHOP_UPDATED_ROUTING = "SHOP_UPDATED";
     public static final String SHOP_UPDATED_QUEUE = "shop.updated.q";
@@ -31,3 +31,4 @@ public class RabbitConfig {
                 .with(SHOP_UPDATED_ROUTING);
     }
 }
+

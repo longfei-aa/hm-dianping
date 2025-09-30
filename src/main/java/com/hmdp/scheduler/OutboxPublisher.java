@@ -1,6 +1,6 @@
 package com.hmdp.scheduler;
 
-import com.hmdp.config.RabbitConfig;
+import com.hmdp.config.ShopMQ;
 import com.hmdp.entity.Outbox;
 import com.hmdp.mapper.OutboxMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +23,8 @@ public class OutboxPublisher {
         for (Outbox o : list) {
             try {
                 rabbitTemplate.convertAndSend(
-                        RabbitConfig.SHOP_EXCHANGE,
-                        RabbitConfig.SHOP_UPDATED_ROUTING,
+                        ShopMQ.SHOP_EXCHANGE,
+                        ShopMQ.SHOP_UPDATED_ROUTING,
                         o.getPayload()
                 );
                 outboxMapper.markSent(o.getId());
