@@ -1,4 +1,4 @@
-package com.hmdp.config;
+package com.hmdp.mq.config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;

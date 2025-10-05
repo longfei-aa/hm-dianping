@@ -1,20 +1,21 @@
-package com.hmdp.scheduler;
+package com.hmdp.mq.producer;
 
-import com.hmdp.config.ShopMQ;
+import com.hmdp.mq.config.ShopMQ;
 import com.hmdp.entity.Outbox;
 import com.hmdp.mapper.OutboxMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 public class OutboxPublisher {
 
+    @Resource
     private OutboxMapper outboxMapper;
+    @Resource
     private RabbitTemplate rabbitTemplate;
 
     @Scheduled(fixedDelay = 1000)

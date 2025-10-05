@@ -1,19 +1,20 @@
-package com.hmdp.mq;
+package com.hmdp.mq.consumer;
 
-import com.hmdp.config.ShopMQ;
-import com.hmdp.entity.Shop;
+import com.hmdp.mq.config.ShopMQ;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
+
+import static com.hmdp.utils.RedisConstants.CACHE_SHOP_KEY;
+
 @Component
-@RequiredArgsConstructor
 public class ShopUpdatedListener {
 
-    private final StringRedisTemplate stringRedisTemplate;
-
-    public static final String CACHE_SHOP_KEY = "cache:shop:"; // 你项目里已有同名常量就用原来的
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
 
     @RabbitListener(queues = ShopMQ.SHOP_UPDATED_QUEUE)
     public void onShopUpdated(String payload) {

@@ -1,6 +1,6 @@
-package com.hmdp.mq;
+package com.hmdp.mq.producer;
 
-import com.hmdp.config.SeckillMQ;
+import com.hmdp.mq.config.SeckillMQ;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.InitializingBean;
