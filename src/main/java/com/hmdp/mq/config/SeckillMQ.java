@@ -13,9 +13,20 @@ public class SeckillMQ {
     public static final String ROUTING_CREATE = "order.create";
     public static final String QUEUE_CREATE = "seckill.order.create.q";
 
-    @Bean TopicExchange seckillExchange() { return new TopicExchange(EXCHANGE, true, false); }
-    @Bean Queue createQueue() { return new Queue(QUEUE_CREATE, true); }
-    @Bean Binding createBinding() {
-        return BindingBuilder.bind(createQueue()).to(seckillExchange()).with(ROUTING_CREATE);
+    @Bean
+    TopicExchange seckillExchange() {
+        return new TopicExchange(EXCHANGE, true, false);
+    }
+
+    @Bean
+    Queue createQueue() {
+        return new Queue(QUEUE_CREATE, true);
+    }
+
+    @Bean
+    Binding createBinding() {
+        return BindingBuilder.bind(createQueue())
+                .to(seckillExchange())
+                .with(ROUTING_CREATE);
     }
 }

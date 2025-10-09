@@ -1,14 +1,15 @@
 package com.hmdp.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hmdp.dto.Result;
 import com.hmdp.dto.UserDTO;
 import com.hmdp.entity.Blog;
+import com.hmdp.entity.Outbox;
 import com.hmdp.entity.User;
 import com.hmdp.mapper.BlogMapper;
+import com.hmdp.mapper.OutboxMapper;
 import com.hmdp.service.IBlogService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hmdp.service.IUserService;
@@ -16,6 +17,7 @@ import com.hmdp.utils.SystemConstants;
 import com.hmdp.utils.UserHolder;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -33,6 +35,8 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
     private IUserService userService;
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+    @Resource
+    private OutboxMapper outboxMapper;
 
     @Override
     public Result queryBlogById(Long id) {
@@ -113,6 +117,32 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements IB
                 .collect(Collectors.toList());
         // 4.返回
         return Result.ok(userDTOS);
+    }
+
+    @Override
+    @Transactional
+    public Result saveBlog(Blog blog) {
+        // 0.获取登录用户
+        Long userId = UserHolder.getUser().getId();
+        blog.setId(userId);
+
+        // 1.保存blog到mysql中
+        boolean ok = this.save(blog);
+        if (!ok||blog.getId()==null) {
+            return Result.fail("保存博客失败");
+        }
+        Long blogId = blog.getId();
+
+        // 2.同步写入outbox中（交给发布器异步投递）
+        String payload = cn.hutool.json.JSONUtil.createObj()
+                .set("blogId", blogId)
+                .set("userId", userId)
+                .toString();
+        Outbox msg = Outbox.of("BLOG_CHANGED", String.valueOf(blogId), payload);
+        outboxMapper.insert(msg);
+
+        // 3.返回
+        return Result.ok(blogId);
     }
 
     private void queryBlogUser(Blog blog) {

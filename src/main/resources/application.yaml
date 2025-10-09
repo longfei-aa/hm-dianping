@@ -7,7 +7,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306
+    url: jdbc:mysql://127.0.0.1:3306/hmdp?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     username: root
     password: slf030621
 
@@ -44,9 +44,6 @@ spring:
 mybatis-plus:
   type-aliases-package: com.hmdp.entity # 别名扫描包
 
-logging:
-  level:
-    com.hmdp: debug
 
 bloom:
   shop:
@@ -62,3 +59,9 @@ ai:
     api-key: sk-ff42bb6edbd84fc2911508949b05f507
     model: qwen3-vl-30b-a3b-instruct
     timeout-ms: 20000
+  embed:
+    endpoint: http://127.0.0.1:8000/embed
+    expected-dim: 1024
+    model: bge-m3
+    normalize: true
+    batch-size: 32

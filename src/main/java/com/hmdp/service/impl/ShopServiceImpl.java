@@ -1,7 +1,5 @@
 package com.hmdp.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import com.hmdp.dto.Result;
 import com.hmdp.entity.CacheEntry;
 import com.hmdp.entity.Outbox;
@@ -10,7 +8,6 @@ import com.hmdp.mapper.OutboxMapper;
 import com.hmdp.mapper.ShopMapper;
 import com.hmdp.service.IShopService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import lombok.RequiredArgsConstructor;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -164,7 +161,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
 
         // 2. 写 outbox（与更新同事务）
         String payload = cn.hutool.json.JSONUtil.createObj()
-                .set("id", id)
+                .set("shop_id", id)
                 .toString();
         Outbox msg = Outbox.of("SHOP_UPDATED", String.valueOf(id), payload);
         outboxMapper.insert(msg);

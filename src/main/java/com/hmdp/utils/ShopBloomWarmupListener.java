@@ -65,7 +65,6 @@ public class ShopBloomWarmupListener {
             long pages = (total + pageSize - 1) / pageSize;
             LambdaQueryWrapper<Shop> qw = new LambdaQueryWrapper<Shop>()
                     .select(Shop::getId)        // 只查 id，省内存
-                    //.eq(Shop::getIsDeleted, 0) // 视情况
                     .orderByAsc(Shop::getId);
 
             for (long current = 1; current <= pages; current++) {
