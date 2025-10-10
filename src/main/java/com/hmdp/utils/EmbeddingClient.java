@@ -53,6 +53,17 @@ public class EmbeddingClient {
         return all;
     }
 
+    /** 单条文本向量化（查询最常用，Java 8 兼容版） */
+    public float[] embed(String text) {
+        if (text == null || text.trim().isEmpty()) return new float[0];
+
+        List<String> single = new ArrayList<>(1);
+        single.add(text);
+
+        List<float[]> v = embedBatch(single);
+        return v.isEmpty() ? new float[0] : v.get(0);
+    }
+
     /** 真实 HTTP 调用（最小实现） */
     private List<float[]> callOnce(List<String> texts) {
         JSONObject req = new JSONObject();
